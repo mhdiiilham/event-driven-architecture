@@ -1,17 +1,17 @@
 version: "3.9"
 services:
   rabbitmq:
-    image: rabbitmq:3.11
-    container_name: 'rabbitmq-local'
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
     ports:
         - 5672:5672
         - 15672:15672
     volumes:
-        - ./docker-conf/rabbitmq/data/:/var/lib/rabbitmq
+        - ./docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
         - ./docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
-        - rabbitmq_net
+        - rabbitmq_go_net
 
 networks:
-  rabbitmq_net:
+  rabbitmq_go_net:
     driver: bridge
