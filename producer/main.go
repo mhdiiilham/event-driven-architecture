@@ -13,8 +13,6 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-var ()
-
 func main() {
 	rand.Seed(time.Now().Unix())
 	log.Println("The NOP System Producer")
@@ -31,7 +29,7 @@ func main() {
 	}
 
 	_, err = ch.QueueDeclare(
-		"ch-testing", // name
+		CHANNEL_NAME, // name
 		false,        // durable
 		false,        // delete when unused
 		false,        // exclusive
@@ -71,7 +69,7 @@ func sendEvent(channel *amqp.Channel, correlationID string, decibles int) {
 	msg := Event{CorrelationID: correlationID, Body: Decible{Value: decibles}, ContentType: "application/json"}
 	b, _ := msg.ToBytes()
 
-	if err := channel.PublishWithContext(context.Background(), "", "ch-testing", false, false, amqp.Publishing{
+	if err := channel.PublishWithContext(context.Background(), "", CHANNEL_NAME, false, false, amqp.Publishing{
 		ContentType:   msg.ContentType,
 		Body:          b,
 		CorrelationId: msg.CorrelationID,

@@ -2,6 +2,10 @@ package main
 
 import "encoding/json"
 
+const (
+	CHANNEL_NAME = "telemetry"
+)
+
 type Decible struct {
 	Value int
 }
