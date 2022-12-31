@@ -13,6 +13,8 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+var messages = []string{}
+
 func main() {
 	rand.Seed(time.Now().Unix())
 	log.Println("The NOP System Producer")
@@ -50,7 +52,7 @@ func main() {
 			go func() {
 				correlationID := generateCorrelationID()
 				db := rand.Intn(500)
-				timeSleep := rand.Intn(5000) * int(time.Millisecond)
+				timeSleep := rand.Intn(500) * int(time.Millisecond)
 				time.Sleep(time.Duration(timeSleep))
 				sendEvent(ch, correlationID, db)
 			}()
@@ -58,6 +60,8 @@ func main() {
 	}
 
 	log.Println("system is closing...")
+	log.Printf("system is published %d of messages", len(messages))
+
 }
 
 func generateCorrelationID() string {
@@ -76,6 +80,7 @@ func sendEvent(channel *amqp.Channel, correlationID string, decibles int) {
 	}); err != nil {
 		log.Printf("failed pushing message %s to channel: %v", correlationID, err)
 	} else {
+		messages = append(messages, string(b))
 		log.Printf("message %s published", correlationID)
 	}
 }
